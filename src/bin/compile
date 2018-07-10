@@ -1,0 +1,6 @@
+#!/bin/bash
+
+CONTRACT=$1
+cd /contracts
+/eosiocppfix -o ${CONTRACT}/${CONTRACT}.wast ${CONTRACT}/${CONTRACT}.cpp
+/eosiocppfix -g ${CONTRACT}/${CONTRACT}.abi ${CONTRACT}/${CONTRACT}.cpp

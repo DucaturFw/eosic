@@ -1,0 +1,16 @@
+#include <eosiolib/eosio.hpp>
+#include "{{name}}.hpp"
+
+using namespace eosio;
+
+class {{name}} : public eosio::contract {
+  public:
+      using contract::contract;
+
+      /// @abi action 
+      void exec() {
+         print("Output from {{name}}");
+      }
+};
+
+EOSIO_ABI( {{name}}, (exec) )

@@ -1,0 +1,81 @@
+{
+  "name": "eosic",
+  "description": "Unofficial toolset to operate with EOSIO platform",
+  "version": "0.0.1",
+  "author": "Aler Denisov @alerdenisov",
+  "bin": {
+    "eosic": "./bin/run"
+  },
+  "bugs": "https://github.com/eos-change/eosic/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "@types/axios": "^0.14.0",
+    "@types/dockerode": "^2.5.4",
+    "@types/execa": "^0.9.0",
+    "@types/fs-extra": "^5.0.3",
+    "@types/globby": "^6.1.0",
+    "@types/handlebars": "^4.0.38",
+    "@types/inquirer": "^0.0.41",
+    "@types/slug": "^0.9.0",
+    "axios": "^0.18.0",
+    "death": "^1.1.0",
+    "dirsum": "^0.1.1",
+    "dockerode": "^2.5.5",
+    "eosjs": "^15.0.0",
+    "execa": "^0.10.0",
+    "fs-extra": "^6.0.1",
+    "globby": "^8.0.1",
+    "handlebars": "^4.0.11",
+    "inquirer": "^6.0.0",
+    "signale": "^1.1.0",
+    "slug": "^0.9.1",
+    "tslib": "^1",
+    "typescript": "2.9.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@oclif/tslint": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "mocha": "^5",
+    "nyc": "^12",
+    "ts-node": "^6",
+    "tslint": "^5"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/eos-change/eosic",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "eosic",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "eos-change/eosic",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "tsc -p test --noEmit && tslint -p test -t stylish",
+    "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme",
+    "prepare": "rm -rf lib && tsc",
+    "test": "nyc mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
