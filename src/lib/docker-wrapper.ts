@@ -62,10 +62,12 @@ export class DockerEOS {
   _containerInfo?: dockerode.ContainerInfo;
   _image?: dockerode.Image;
   _container?: dockerode.Container;
+  _cwd: string;
 
   ready: boolean;
 
-  constructor(imageCfg?: DockerEOSImageConfig) {
+  constructor(cwd?: string, imageCfg?: DockerEOSImageConfig) {
+    this._cwd = cwd || process.cwd();
     this.ready = false;
     this._config = {
       image: imageCfg || {
@@ -77,8 +79,11 @@ export class DockerEOS {
     this._docker = new dockerode();
   }
 
-  static async create(config?: DockerEOSCreateConfig): Promise<DockerEOS> {
-    let instance = new DockerEOS(config && config.imageConfig);
+  static async create(
+    cwd?: string,
+    config?: DockerEOSCreateConfig
+  ): Promise<DockerEOS> {
+    let instance = new DockerEOS(cwd, config && config.imageConfig);
     await instance.initialize();
     return instance;
   }
@@ -136,11 +141,9 @@ export class DockerEOS {
               type: "input",
               name: "dockerFile",
               message: "Path to Dockerfile",
-              default: path.join(process.cwd(), "Dockerfile"),
+              default: path.join(this._cwd, "Dockerfile"),
               transformer: input =>
-                path.isAbsolute(input)
-                  ? input
-                  : path.resolve(process.cwd(), input)
+                path.isAbsolute(input) ? input : path.resolve(this._cwd, input)
             }
           ])
         );
@@ -248,8 +251,8 @@ export class DockerEOS {
           ]
         },
         Binds: [
-          `${process.cwd()}/config.ini:/opt/eosio/bin/data-dir/config.ini`,
-          `${process.cwd()}/contracts:/contracts`,
+          `${this._cwd}/config.ini:/opt/eosio/bin/data-dir/config.ini`,
+          `${this._cwd}/contracts:/contracts`,
           `${path.resolve(__dirname, "..", "bin")}/.bashrc:/.bashrc`,
           `${path.resolve(__dirname, "..", "bin")}/eosiocppfix:/eosiocppfix`,
           `${path.resolve(__dirname, "..", "bin")}/compile:/compile`

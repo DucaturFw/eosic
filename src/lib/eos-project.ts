@@ -65,8 +65,8 @@ export default class EosProject {
   }
 
   static async load(root: string): Promise<EosProject> {
-    console.log(root);
-    const configPath = path.resolve(path.join(root, "eosic.json"));
+    const _configPath = path.join(root, "eosic.json");
+    const configPath = path.isAbsolute(_configPath) ? _configPath : path.resolve(_configPath);
     const configContent = await fs.readFile(configPath, "utf8");
     const config = <EosProjectConfig>JSON.parse(configContent);
     return new EosProject(root, config);
@@ -129,7 +129,7 @@ export default class EosProject {
 
   async start(log: boolean = true): Promise<any> {
     if (!this.session) {
-      this.session = await DockerEOS.create();
+      this.session = await DockerEOS.create(this.root);
       return this.session.start(log);
     }
   }
