@@ -15,9 +15,13 @@ export interface GeneratorInterface {
 
 export default abstract class Generator<T extends object>
   implements GeneratorInterface {
-  options!: GeneratorOptions & T;
+  options: GeneratorOptions & T;
   abstract readonly defaultConfig: T;
   readonly templateRoot: string = path.resolve(__dirname, "../../templates");
+
+  constructor() {
+    this.options = {} as GeneratorOptions & T;
+  }
 
   async generate(opts: GeneratorOptions & T) {
     this.options = opts;
