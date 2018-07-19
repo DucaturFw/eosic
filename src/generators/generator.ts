@@ -17,7 +17,7 @@ export default abstract class Generator<T extends object>
   implements GeneratorInterface {
   options!: GeneratorOptions & T;
   abstract readonly defaultConfig: T;
-  readonly templateRoot: string = path.resolve(__dirname, "../templates");
+  readonly templateRoot: string = path.resolve(__dirname, "../../templates");
 
   async generate(opts: GeneratorOptions & T) {
     this.options = opts;
