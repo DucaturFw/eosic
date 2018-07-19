@@ -1,7 +1,7 @@
 {
   "name": "eosic",
   "description": "Unofficial toolset to operate with EOSIO platform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Aler Denisov @alerdenisov",
   "bin": {
     "eosic": "./bin/run"
@@ -65,7 +65,6 @@
     "posttest": "tsc -p test --noEmit && tslint -p test -t stylish",
     "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme",
     "prepare": "rm -rf lib && tsc",
-    "postinstall": "rm -rf lib && tsc",
     "test": "nyc mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
