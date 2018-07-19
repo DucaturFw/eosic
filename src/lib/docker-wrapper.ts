@@ -253,9 +253,14 @@ export class DockerEOS {
         Binds: [
           `${this._cwd}/config.ini:/opt/eosio/bin/data-dir/config.ini`,
           `${this._cwd}/contracts:/contracts`,
-          `${path.resolve(__dirname, "..", "bin")}/.bashrc:/.bashrc`,
-          `${path.resolve(__dirname, "..", "bin")}/eosiocppfix:/eosiocppfix`,
-          `${path.resolve(__dirname, "..", "bin")}/compile:/compile`
+          `${path.resolve(__dirname, "..", "..", "bin")}/.bashrc:/.bashrc`,
+          `${path.resolve(
+            __dirname,
+            "..",
+            "..",
+            "bin"
+          )}/eosiocppfix:/eosiocppfix`,
+          `${path.resolve(__dirname, "..", "..", "bin")}/compile:/compile`
         ]
       }
     });
