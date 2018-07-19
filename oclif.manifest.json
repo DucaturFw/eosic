@@ -1,0 +1,243 @@
+{
+  "version": "0.0.1",
+  "commands": {
+    "compile": {
+      "id": "compile",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        }
+      },
+      "args": [
+        { "name": "0", "required": false, "hidden": true },
+        { "name": "1", "required": false, "hidden": true },
+        { "name": "2", "required": false, "hidden": true },
+        { "name": "3", "required": false, "hidden": true },
+        { "name": "4", "required": false, "hidden": true },
+        { "name": "5", "required": false, "hidden": true },
+        { "name": "6", "required": false, "hidden": true },
+        { "name": "7", "required": false, "hidden": true },
+        { "name": "8", "required": false, "hidden": true },
+        { "name": "9", "required": false, "hidden": true },
+        { "name": "10", "required": false, "hidden": true },
+        { "name": "11", "required": false, "hidden": true },
+        { "name": "12", "required": false, "hidden": true },
+        { "name": "13", "required": false, "hidden": true },
+        { "name": "14", "required": false, "hidden": true }
+      ]
+    },
+    "contract": {
+      "id": "contract",
+      "description": "create new contract",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        },
+        "description": { "name": "description", "type": "option", "char": "d" },
+        "withBuiltin": { "name": "withBuiltin", "type": "boolean", "char": "b" }
+      },
+      "args": [
+        {
+          "name": "name",
+          "description": "Name of generated contract",
+          "required": true
+        }
+      ]
+    },
+    "init": {
+      "id": "init",
+      "description": "Initialize EOSIC project",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        },
+        "description": { "name": "description", "type": "option", "char": "d" },
+        "withBuiltin": { "name": "withBuiltin", "type": "boolean", "char": "b" }
+      },
+      "args": []
+    },
+    "start": {
+      "id": "start",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        }
+      },
+      "args": []
+    },
+    "test": {
+      "id": "test",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        }
+      },
+      "args": []
+    },
+    "internal:base-command": {
+      "id": "internal:base-command",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        }
+      },
+      "args": []
+    },
+    "internal:generator-command": {
+      "id": "internal:generator-command",
+      "pluginName": "eosic",
+      "pluginType": "core",
+      "aliases": [],
+      "flags": {
+        "help": {
+          "name": "help",
+          "type": "boolean",
+          "char": "h",
+          "description": "show CLI help"
+        },
+        "quiet": {
+          "name": "quiet",
+          "type": "boolean",
+          "char": "q",
+          "description": "runs in quiet (non-interactive) mode"
+        },
+        "force": { "name": "force", "type": "boolean", "char": "f" },
+        "verbose": { "name": "verbose", "type": "boolean", "char": "v" },
+        "cwd": {
+          "name": "cwd",
+          "type": "option",
+          "char": "c",
+          "description": "custom work directory (default is current directory)",
+          "default": "/Users/aler/crypto/ducatur/exchange/packages/eosic"
+        }
+      },
+      "args": []
+    }
+  }
+}

@@ -11,7 +11,6 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
-    "@types/axios": "^0.14.0",
     "@types/dockerode": "^2.5.4",
     "@types/execa": "^0.9.0",
     "@types/fs-extra": "^5.0.3",
@@ -50,23 +49,15 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "files": [
-    "/bin",
-    "/lib",
-    "/oclif.manifest.json"
-  ],
+  "files": ["/bin", "/lib", "/oclif.manifest.json"],
   "homepage": "https://github.com/eos-change/eosic",
-  "keywords": [
-    "oclif"
-  ],
+  "keywords": ["oclif"],
   "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
     "bin": "eosic",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
+    "plugins": ["@oclif/plugin-help"]
   },
   "repository": "eos-change/eosic",
   "scripts": {
@@ -74,6 +65,7 @@
     "posttest": "tsc -p test --noEmit && tslint -p test -t stylish",
     "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme",
     "prepare": "rm -rf lib && tsc",
+    "postinstall": "rm -rf lib && tsc",
     "test": "nyc mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
