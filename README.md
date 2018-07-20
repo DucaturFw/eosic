@@ -22,7 +22,7 @@ $ npm install -g eosic
 $ eosic COMMAND
 running command...
 $ eosic (-v|--version|version)
-eosic/0.0.1 darwin-x64 node-v9.8.0
+eosic/0.0.2 darwin-x64 node-v9.8.0
 $ eosic --help [COMMAND]
 USAGE
   $ eosic COMMAND
@@ -59,7 +59,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/compile.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/compile.js)_
+_See code: [lib/commands/compile.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/compile.js)_
 
 ## `eosic contract NAME`
 
@@ -89,7 +89,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/contract.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/contract.js)_
+_See code: [lib/commands/contract.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/contract.js)_
 
 ## `eosic help [COMMAND]`
 
@@ -133,7 +133,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/init.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/init.js)_
+_See code: [lib/commands/init.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/init.js)_
 
 ## `eosic internal:base-command`
 
@@ -154,7 +154,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/internal/base-command.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/internal/base-command.js)_
+_See code: [lib/commands/internal/base-command.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/internal/base-command.js)_
 
 ## `eosic internal:generator-command`
 
@@ -175,7 +175,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/internal/generator-command.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/internal/generator-command.js)_
+_See code: [lib/commands/internal/generator-command.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/internal/generator-command.js)_
 
 ## `eosic start`
 
@@ -196,7 +196,7 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/start.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/start.js)_
+_See code: [lib/commands/start.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/start.js)_
 
 ## `eosic test`
 
@@ -217,5 +217,5 @@ OPTIONS
   -v, --verbose
 ```
 
-_See code: [lib/commands/test.js](https://github.com/eos-change/eosic/blob/v0.0.1/lib/commands/test.js)_
+_See code: [lib/commands/test.js](https://github.com/eos-change/eosic/blob/v0.0.2/lib/commands/test.js)_
 <!-- commandsstop -->
