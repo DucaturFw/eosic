@@ -31,8 +31,10 @@ export default class Compile extends BaseCommand {
       contracts = Object.keys(project.configuration.contracts);
     }
 
-    const tasks = contracts.map(contract => project.compile(contract));
-    await Promise.all(tasks);
+    for (let contract of contracts) {
+      await project.compile(contract);
+    }
+
     await project.stop();
     await project.save();
   }
