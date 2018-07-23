@@ -8,7 +8,7 @@ import * as inquirer from "inquirer";
 import * as signale from "signale";
 import chalk from "chalk";
 
-export const DEFAULT_IMAGE_REPO = "eosic/environment";
+export const DEFAULT_IMAGE_REPO = "eosio/eos-dev";
 export const DEFAULT_IMAGE_TAG = "latest";
 
 function choiceList(...args: string[]): inquirer.objects.ChoiceOption[] {

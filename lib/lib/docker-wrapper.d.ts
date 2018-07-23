@@ -1,5 +1,5 @@
 import * as dockerode from "dockerode";
-export declare const DEFAULT_IMAGE_REPO = "eosic/environment";
+export declare const DEFAULT_IMAGE_REPO = "eosio/eos-dev";
 export declare const DEFAULT_IMAGE_TAG = "latest";
 export interface DockerExecuteOptions {
     Cmd: string[];
