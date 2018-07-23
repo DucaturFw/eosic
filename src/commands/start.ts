@@ -24,11 +24,11 @@ export default class Start extends BaseCommand {
       await new Promise(resolve => setTimeout(resolve, 1000));
       try {
         const responce = await axios.get(
-          "http://127.0.0.1:8888/v1/chain/get_info"
+          "http://0.0.0.0:8888/v1/chain/get_info"
         );
         success = true;
       } catch (e) {
-        console.error("waiting for a node");
+        console.error(`waiting for a node (${tries} try)`);
       }
     }
 

@@ -40,7 +40,7 @@ export default class Test extends BaseCommand {
         );
         success = true;
       } catch (e) {
-        console.error("waiting for a node");
+        console.error(`waiting for a node (${tries} try)`);
       }
     }
 
