@@ -20,16 +20,17 @@ export default class Compile extends BaseCommand {
 
   async run() {
     const { args, flags } = this;
-    const contracts = Array(MAX_CONSTRACTS_COUNT)
+    let contracts = Array(MAX_CONSTRACTS_COUNT)
       .fill(0)
       .map((_, index) => args[index])
       .filter(contract => contract != undefined);
 
+    const project = await EosProject.load(flags.cwd);
+
     if (!contracts.length) {
-      throw new Error("Define at least one contract to compile");
+      contracts = Object.keys(project.configuration.contracts);
     }
 
-    const project = await EosProject.load(flags.cwd);
     const tasks = contracts.map(contract => project.compile(contract));
     await Promise.all(tasks);
     await project.stop();
