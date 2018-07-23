@@ -54,7 +54,6 @@ export async function createContract(
     .join("");
 
   const contractName = options.contractName || `${pid}${name}`.slice(0, 12);
-  // console.log(contractName);
 
   const wasm = fs.readFileSync(
     path.join(options.cwd, `contracts/${name}/${name}.wasm`)
@@ -65,7 +64,6 @@ export async function createContract(
     "utf8"
   );
 
-  // console.log("newaccount");
   const account = await eos.newaccount({
     creator: "eosio",
     name: contractName,
@@ -73,12 +71,9 @@ export async function createContract(
     active: pub
   });
 
-  console.log("setcode");
   await eos.setcode(contractName, 0, 0, wasm);
-  console.log("setabi");
   await eos.setabi(contractName, JSON.parse(abi));
   await new Promise(resolve => setTimeout(resolve, 1000));
-  console.log("load contract at " + contractName);
   const contract = await eos.contract(contractName);
   return {
     account: contractName,

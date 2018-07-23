@@ -39,14 +39,12 @@ export default class Start extends BaseCommand {
     scripts.forEach(script => require(path.resolve(this.flags.cwd, script)));
 
     death(async () => {
-      console.log("exit");
       await project.stop();
       process.exit();
     });
 
     while (true) {
       await sleep(1000);
-      console.log("tst");
     }
   }
 }
