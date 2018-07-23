@@ -77,6 +77,7 @@ export async function createContract(
   await eos.setcode(contractName, 0, 0, wasm);
   console.log("setabi");
   await eos.setabi(contractName, JSON.parse(abi));
+  await new Promise(resolve => setTimeout(resolve, 1000));
   console.log("load contract at " + contractName);
   const contract = await eos.contract(contractName);
   return {
