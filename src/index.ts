@@ -74,12 +74,12 @@ export async function createContract(
   });
 
   // await eos.transaction((tr: any) => {
-  // console.log("setcode");
+  console.log("setcode");
   await eos.setcode(contractName, 0, 0, wasm);
-  // console.log("setabi");
+  console.log("setabi");
   await eos.setabi(contractName, JSON.parse(abi));
   // });
-  // console.log("load contract at " + contractName);
+  console.log("load contract at " + contractName);
   const contract = await eos.contract(contractName);
   return {
     account: contractName,
