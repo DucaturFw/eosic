@@ -220,7 +220,6 @@ export class DockerEOS {
     this._container = await this._docker.createContainer({
       name: `eosic-${(Math.random() * 0xffffff) >> 0}`,
       Image: this._imageInfo.RepoTags[0],
-      // Cmd: ["/bin/bash"],
       Cmd: [
         "/opt/eosio/bin/nodeosd.sh",
         "--data-dir",

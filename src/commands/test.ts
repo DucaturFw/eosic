@@ -36,7 +36,7 @@ export default class Test extends BaseCommand {
       await new Promise(resolve => setTimeout(resolve, 1000));
       try {
         const responce = await axios.get(
-          "http://127.0.0.1:8888/v1/chain/get_info"
+          "http://0.0.0.0:8888/v1/chain/get_info"
         );
         success = true;
       } catch (e) {

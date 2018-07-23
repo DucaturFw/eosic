@@ -24,9 +24,7 @@ export async function start(opts?: any): Promise<EosProject> {
     tries++;
     await new Promise(resolve => setTimeout(resolve, 1000));
     try {
-      const responce = await axios.get(
-        "http://127.0.0.1:8888/v1/chain/get_info"
-      );
+      const responce = await axios.get("http://0.0.0.0:8888/v1/chain/get_info");
       success = true;
     } catch (e) {
       console.error("waiting for a node");
