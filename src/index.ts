@@ -9,6 +9,19 @@ const Eos: any = require("eosjs");
 
 const { ecc } = Eos.modules;
 export { run } from "@oclif/command";
+
+export function createAccount(
+  eos: any,
+  pub: string,
+  name: string
+): Promise<void> {
+  return eos.newaccount({
+    creator: "eosio",
+    name: name,
+    owner: pub,
+    active: pub
+  });
+}
 export async function start(opts?: any): Promise<EosProject> {
   const options = {
     cwd: opts.cwd || process.cwd(),
@@ -33,6 +46,7 @@ export async function start(opts?: any): Promise<EosProject> {
 
   return project;
 }
+
 export async function createContract(
   pub: string,
   eos: any,
@@ -93,6 +107,7 @@ function deepJson(input: { [index: string]: any }): string {
 
   return JSON.stringify(output);
 }
+
 export function payload(input: { [index: string]: any }): string {
   return deepJson(input);
 }
