@@ -110,7 +110,16 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.0.tgz#50c1e2260ac0ed9439a181de3725a0168d59c48a"
 
-"@oclif/command@^1.0.0", "@oclif/command@^1.4.30", "@oclif/command@^1.4.33":
+"@oclif/command@^1":
+  version "1.4.36"
+  resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.4.36.tgz#cca1e02d8264f34be9c2d692a3c81efc0de15fdf"
+  dependencies:
+    "@oclif/errors" "^1.1.2"
+    "@oclif/parser" "^3.5.2"
+    debug "^3.1.0"
+    semver "^5.5.0"
+
+"@oclif/command@^1.4.30", "@oclif/command@^1.4.33":
   version "1.4.34"
   resolved "https://registry.yarnpkg.com/@oclif/command/-/command-1.4.34.tgz#05a8798740e9a01209732cba6557f21629043b30"
   dependencies:
