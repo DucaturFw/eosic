@@ -13,10 +13,12 @@ export { run } from "@oclif/command";
 export function createAccount(
   eos: any,
   pub: string,
-  name: string
+  name: string,
+  creator?: string
 ): Promise<void> {
+  creator = creator || "eosio";
   return eos.newaccount({
-    creator: "eosio",
+    creator: creator,
     name: name,
     owner: pub,
     active: pub
@@ -57,6 +59,7 @@ export async function createContract(
     cwd: process.cwd(),
     contractName: null,
     logs: false,
+    creator: "eosio",
     ...opts
   };
 
@@ -78,12 +81,7 @@ export async function createContract(
     "utf8"
   );
 
-  const account = await eos.newaccount({
-    creator: "eosio",
-    name: contractName,
-    owner: pub,
-    active: pub
-  });
+  const account = createAccount(eos, pub, contractName, opts.creator);
 
   await eos.setcode(contractName, 0, 0, wasm);
   await eos.setabi(contractName, JSON.parse(abi));
