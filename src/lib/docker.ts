@@ -34,6 +34,7 @@ export interface IDockerContainerOptions {
 
 export interface IDockerOptions {
   cwd: string;
+  stderr: boolean;
   stdout: boolean;
   container: IDockerContainerOptions;
   image: IDockerImageOptions;
@@ -64,6 +65,7 @@ export const DockerRequirements = {
     removeVolumes: true
   },
   stdout: true,
+  stderr: true,
   onStart: false,
   onStop: false,
   logs: true,
@@ -143,15 +145,15 @@ export default abstract class Docker {
     return this;
   }
 
-  private get ready() {
+  get ready() {
     return this.imageInfo && this.container;
   }
 
-  private get imageRepository() {
+  get imageRepository() {
     return `${this.options.image.repository}:${this.options.image.tag}`;
   }
 
-  private get containerExposedPorts() {
+  get containerExposedPorts() {
     return this.options.container.expose.reduce(
       (expose, port) => {
         expose[port.toString()] = {};
@@ -161,7 +163,7 @@ export default abstract class Docker {
     );
   }
 
-  private get containerPortBindings() {
+  get containerPortBindings() {
     const keys = Object.keys(this.options.container.ports);
     return keys.reduce(
       (bindings, internal) => {
@@ -175,7 +177,7 @@ export default abstract class Docker {
     );
   }
 
-  private get containerBinds() {
+  get containerBinds() {
     const binds = Object.keys(this.options.container.binds);
     return binds.map(bind => {
       const host = this.options.container.binds[bind];
@@ -187,7 +189,7 @@ export default abstract class Docker {
     });
   }
 
-  private get containerCommands() {
+  get containerCommands() {
     const cmds = [];
     for (let command of this.options.container.command) {
       cmds.push(...command.split(" "));
@@ -244,8 +246,12 @@ export default abstract class Docker {
     const stdout = new PassThrough();
     const stderr = new PassThrough();
     this.container!.modem.demuxStream(stream, stderr, stdout);
-    this.transferStream(stdout, this.options.logs.bind(this));
-    this.transferStream(stderr, this.options.errors.bind(this));
+    if (this.options.stdout) {
+      this.transferStream(stdout, this.options.logs.bind(this));
+    }
+    if (this.options.stderr) {
+      this.transferStream(stderr, this.options.errors.bind(this));
+    }
   }
 
   private transferStream(
@@ -276,18 +282,16 @@ export default abstract class Docker {
 
     await this.container.start();
 
-    if (this.options.stdout) {
-      this.container.logs(
-        { follow: true, stdout: true, stderr: true },
-        (err, stream: any) => {
-          if (err) {
-            throw err;
-          }
-
-          this.transferStd(stream);
+    this.container.logs(
+      { follow: true, stdout: true, stderr: true },
+      (err, stream: any) => {
+        if (err) {
+          throw err;
         }
-      );
-    }
+
+        this.transferStd(stream);
+      }
+    );
 
     if (this.options.onStart && this.options.onStart.length) {
       for (let cmd of this.options.onStart) {
@@ -343,11 +347,21 @@ export default abstract class Docker {
 
         exec.start((err: any, stream: any) => {
           console.log("execute: " + args.join(" "));
-          if (this.options.stdout) {
-            this.transferStd(stream);
-          }
+          this.transferStream(stream, this.options.logs.bind(this));
+          stream.on("end", () => resolve());
         });
       });
     });
+  }
+
+  async healthy(): Promise<boolean> {
+    if (!this.container) {
+      throw new Error(
+        "Container not found! Try initialize docker object before start"
+      );
+    }
+
+    const inspectResult = await this.container.inspect();
+    return inspectResult.State.Running;
   }
 }
