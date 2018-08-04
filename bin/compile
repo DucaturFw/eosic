@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CONTRACT=$1
+CONTRACTPATH=$1
 cd /contracts
-/eosiocppfix -o ${CONTRACT}/${CONTRACT}.wast ${CONTRACT}/${CONTRACT}.cpp
-/eosiocppfix -g ${CONTRACT}/${CONTRACT}.abi ${CONTRACT}/${CONTRACT}.cpp
+echo ./${CONTRACTPATH}
+/eosiocppfix -o ./${CONTRACTPATH}.wast ./${CONTRACTPATH}.cpp
+/eosiocppfix -g ./${CONTRACTPATH}.abi ./${CONTRACTPATH}.cpp
