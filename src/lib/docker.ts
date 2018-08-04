@@ -39,6 +39,8 @@ export interface IDockerOptions {
   image: IDockerImageOptions;
   onStart: string[];
   onStop: string[];
+  logs: (message?: any, ...optionalParams: any[]) => void;
+  errors: (message?: any, ...optionalParams: any[]) => void;
 }
 
 type IOptionsRequirements<T> = {
@@ -63,7 +65,9 @@ export const DockerRequirements = {
   },
   stdout: true,
   onStart: false,
-  onStop: false
+  onStop: false,
+  logs: true,
+  errors: true
 } as IOptionsRequirements<IDockerOptions>;
 
 export default abstract class Docker {
@@ -236,6 +240,14 @@ export default abstract class Docker {
     });
   }
 
+  private transferStd(stream: NodeJS.ReadableStream) {
+    const stdout = new PassThrough();
+    const stderr = new PassThrough();
+    this.container!.modem.demuxStream(stream, stderr, stdout);
+    this.transferStream(stdout, this.options.logs.bind(this));
+    this.transferStream(stderr, this.options.errors.bind(this));
+  }
+
   private transferStream(
     stream: NodeJS.ReadableStream,
     destination: (line: string) => void,
@@ -272,14 +284,14 @@ export default abstract class Docker {
             throw err;
           }
 
-          this.transferStream(stream, console.log);
+          this.transferStd(stream);
         }
       );
     }
 
     if (this.options.onStart && this.options.onStart.length) {
       for (let cmd of this.options.onStart) {
-        this.exec(...cmd.split(" "));
+        await this.exec(...cmd.split(" "));
       }
     }
   }
@@ -330,8 +342,9 @@ export default abstract class Docker {
         }
 
         exec.start((err: any, stream: any) => {
+          console.log("execute: " + args.join(" "));
           if (this.options.stdout) {
-            this.transferStream(stream, console.log);
+            this.transferStd(stream);
           }
         });
       });
