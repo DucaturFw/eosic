@@ -1,6 +1,7 @@
 import * as path from "path";
 import Docker, { IDockerOptions } from "./docker";
 import { DeepPartial } from "../utils";
+import chalk from "chalk";
 
 export const binariesPath = path.resolve(__dirname, "..", "..", "bin");
 
@@ -38,7 +39,21 @@ export default class EosDocker extends Docker {
         removeVolumes: true
       },
       stdout: true,
-      onStart: ["chmod +x /compile", "chmod +x /eosiocppfix"]
+      onStart: ["chmod +x /compile", "chmod +x /eosiocppfix"],
+      logs(msg: any, ...args: any[]) {
+        msg.split("\n").forEach((line: string) => {
+          console.log(
+            chalk.gray(`[${(<Docker>this).options.container!.name}]: ${line}`)
+          );
+        });
+      },
+      errors(msg: any, ...args: any[]) {
+        msg.split("\n").forEach((line: string) => {
+          console.log(
+            chalk.red(`[${(<Docker>this).options.container!.name}]: ${line}`)
+          );
+        });
+      }
     };
   }
 }
