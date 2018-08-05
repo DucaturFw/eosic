@@ -4,8 +4,10 @@ import * as globby from "globby";
 import * as dirsum from "dirsum";
 import { DockerEOS } from "./docker-wrapper";
 import * as signale from "signale";
-import Docker from "./docker";
+import Docker, { IDockerOptions } from "./docker";
 import EosDocker from "./eos-docker";
+import { DeepPartial } from "../utils";
+import * as deepmerge from "deepmerge";
 
 export interface EosProjectConfig {
   name: string;
@@ -62,24 +64,33 @@ export default class EosProject {
   configuration: EosProjectConfig;
   private contracts: EosContractsCollection = {};
   session!: EosDocker;
+  dockerOptions?: DeepPartial<IDockerOptions>;
 
-  constructor(root: string, config: EosProjectConfig) {
+  constructor(
+    root: string,
+    config: EosProjectConfig,
+    dockerOptions?: DeepPartial<IDockerOptions>
+  ) {
     if (!path.isAbsolute(root)) {
       throw new Error("Path should be absolute");
     }
 
     this.configuration = config;
     this.root = root;
+    this.dockerOptions = dockerOptions;
   }
 
-  static async load(root: string): Promise<EosProject> {
+  static async load(
+    root: string,
+    dockerOptions?: DeepPartial<IDockerOptions>
+  ): Promise<EosProject> {
     const _configPath = path.join(root, "eosic.json");
     const configPath = path.isAbsolute(_configPath)
       ? _configPath
       : path.resolve(_configPath);
     const configContent = await fs.readFile(configPath, "utf8");
     const config = <EosProjectConfig>JSON.parse(configContent);
-    return new EosProject(root, config);
+    return new EosProject(root, config, dockerOptions);
   }
 
   get configPath() {
@@ -139,17 +150,23 @@ export default class EosProject {
 
   async start(log: boolean = true): Promise<any> {
     if (!this.session) {
-      this.session = await Docker.create<EosDocker>(EosDocker, {
-        cwd: this.root,
-        container: {
-          binds: {
-            "/contracts": this.contractsPath
-          }
-        }
-      });
+      this.session = await Docker.create<EosDocker>(
+        EosDocker,
+        deepmerge(
+          {
+            cwd: this.root,
+            container: {
+              binds: {
+                "/contracts": this.contractsPath
+              }
+            }
+          },
+          this.dockerOptions
+        )
+      );
 
-      console.log(this.session.containerBinds);
-      return this.session.start();
+      await this.session.start();
+      return this.session.healthy();
     }
   }
 
