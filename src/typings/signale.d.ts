@@ -22,6 +22,8 @@ declare module "signale" {
     await(...input: SignaleInput[]): void;
     watch(...input: SignaleInput[]): void;
     log(...input: SignaleInput[]): void;
+
+    Signale: new (opts?: any) => any;
   }
 
   var signale: Signale;

@@ -50,6 +50,12 @@ export class EosContract {
 export type EosContractsCollection = { [name: string]: EosContract };
 
 export default class EosProject {
+  static DEFAULT_PROJECT: string = path.resolve(
+    __dirname,
+    "..",
+    "..",
+    "default"
+  );
   root: string;
   configuration: EosProjectConfig;
   private contracts: EosContractsCollection = {};
@@ -66,7 +72,9 @@ export default class EosProject {
 
   static async load(root: string): Promise<EosProject> {
     const _configPath = path.join(root, "eosic.json");
-    const configPath = path.isAbsolute(_configPath) ? _configPath : path.resolve(_configPath);
+    const configPath = path.isAbsolute(_configPath)
+      ? _configPath
+      : path.resolve(_configPath);
     const configContent = await fs.readFile(configPath, "utf8");
     const config = <EosProjectConfig>JSON.parse(configContent);
     return new EosProject(root, config);
@@ -97,7 +105,7 @@ export default class EosProject {
     const config: EosContractConfig = this.sanitizeContractConfig(_config);
     const { name } = config;
     const contractRoot = path.join(this.contractsPath, name);
-    if (!await fs.pathExists(contractRoot)) {
+    if (!(await fs.pathExists(contractRoot))) {
       throw new Error("Contract not found in project");
     }
 
@@ -151,7 +159,9 @@ export default class EosProject {
         await this.start(false);
       }
       signale.info(`Starting compilation of ${contractName}`);
-      const output = await this.session.compile(contractName);
+      const output = await this.session.compile(
+        `${contractName}/${contractName}`
+      );
       output.split("\n").forEach(line => signale.debug(line));
       const compiledHash = await contract.digest();
       this.configuration.contracts[contractName].checksum = compiledHash;

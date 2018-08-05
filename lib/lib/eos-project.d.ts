@@ -26,6 +26,7 @@ export declare type EosContractsCollection = {
     [name: string]: EosContract;
 };
 export default class EosProject {
+    static DEFAULT_PROJECT: string;
     root: string;
     configuration: EosProjectConfig;
     private contracts;
