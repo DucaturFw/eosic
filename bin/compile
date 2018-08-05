@@ -2,6 +2,5 @@
 
 CONTRACTPATH=$1
 cd /contracts
-echo ./${CONTRACTPATH}
-/eosiocppfix -o ./${CONTRACTPATH}.wast ./${CONTRACTPATH}.cpp
-/eosiocppfix -g ./${CONTRACTPATH}.abi ./${CONTRACTPATH}.cpp
+/eosiocppfix -o ${CONTRACTPATH}.wast ${CONTRACTPATH}.cpp
+/eosiocppfix -g ${CONTRACTPATH}.abi ${CONTRACTPATH}.cpp
