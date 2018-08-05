@@ -46,7 +46,7 @@ export default class Compile extends BaseCommand {
         }
       },
       stderr: true,
-      stdout: false
+      stdout: !!flags.verbose
     });
 
     if ((<string>args.cpp).indexOf(".cpp") === -1) {

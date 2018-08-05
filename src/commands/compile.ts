@@ -25,7 +25,10 @@ export default class Compile extends BaseCommand {
       .map((_, index) => args[index])
       .filter(contract => contract != undefined);
 
-    const project = await EosProject.load(flags.cwd);
+    const project = await EosProject.load(flags.cwd, {
+      stdout: !!flags.verbose,
+      stderr: true
+    });
 
     if (!contracts.length) {
       contracts = Object.keys(project.configuration.contracts);
