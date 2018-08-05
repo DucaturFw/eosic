@@ -41,9 +41,16 @@ function build_contract {
         name=`basename $file`
         filePath=`dirname $file`
 
-        ($PRINT_CMDS; /opt/wasm/bin/clang -emit-llvm -O3 --std=c++14 --target=wasm32 -nostdinc \
-                                   -nostdlib -nostdlibinc -ffreestanding -nostdlib -fno-threadsafe-statics -fno-rtti \
-                                   -fno-exceptions -I ${EOSIO_INSTALL_DIR}/include \
+        ($PRINT_CMDS; /opt/wasm/bin/clang -emit-llvm \
+                                   -O3 --std=c++14 \
+                                   --target=wasm32 -nostdinc \
+                                   -DBOOST_DISABLE_ASSERTS \
+                                   -DBOOST_EXCEPTION_DISABLE \
+                                   -nostdlib -nostdlibinc \
+                                   -ffreestanding -nostdlib \
+                                   -fno-threadsafe-statics -fno-rtti \
+                                   -fno-exceptions \
+                                   -I ${EOSIO_INSTALL_DIR}/include \
                                    -I ${EOSIO_INSTALL_DIR}/include/libc++/upstream/include \
                                    -I ${EOSIO_INSTALL_DIR}/include/musl/upstream/include \
                                    -I ${BOOST_INCLUDE_DIR} \
