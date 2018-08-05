@@ -18,7 +18,7 @@ export default class EosDocker extends Docker {
       cwd: process.cwd(),
       image: {
         repository: "eosio/eos-dev",
-        tag: "latest"
+        tag: "v1.1.1"
       },
       container: {
         name: `eosic-${(Math.random() * 0xffffff) >> 0}`,
@@ -65,6 +65,7 @@ export default class EosDocker extends Docker {
   }
 
   async compile(path: string) {
+    // return this.exec("eosio-cpp ");
     return this.exec(`bash`, `-c`, `/compile ${path}`);
   }
 
