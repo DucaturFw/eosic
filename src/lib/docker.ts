@@ -346,8 +346,7 @@ export default abstract class Docker {
         }
 
         exec.start((err: any, stream: any) => {
-          console.log("execute: " + args.join(" "));
-          this.transferStream(stream, this.options.logs.bind(this));
+          this.transferStd(stream);
           stream.on("end", () => resolve());
         });
       });
