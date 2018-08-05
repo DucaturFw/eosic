@@ -168,7 +168,10 @@ export default abstract class Docker {
     return keys.reduce(
       (bindings, internal) => {
         bindings[internal] = [
-          { HostPort: this.options.container.ports[internal].toString() }
+          {
+            HostIP: "127.0.0.1",
+            HostPort: this.options.container.ports[internal].toString()
+          }
         ];
 
         return bindings;
@@ -198,7 +201,7 @@ export default abstract class Docker {
     return cmds;
   }
 
-  private async findImage(pull: boolean = true): Promise<dockerode.ImageInfo> {
+  private async findImage(): Promise<dockerode.ImageInfo> {
     const withTags = (image: dockerode.ImageInfo) =>
       image.RepoTags !== null && image.RepoTags.length;
     const compareString = (find: string) => (input: string) =>
@@ -212,12 +215,11 @@ export default abstract class Docker {
       .filter(withProperTag(this.imageRepository));
 
     if (!fit.length) {
-      if (pull) {
-        const image = await this.dockerode.pull(this.imageRepository, {});
-        return this.findImage(false);
-      } else {
-        throw new Error("Image not found and unavailable at hub");
-      }
+      throw new Error(
+        `Image not found and unavailable at hub. Try docker pull ${
+          this.imageRepository
+        }`
+      );
     } else {
       return fit[0];
     }
@@ -246,6 +248,7 @@ export default abstract class Docker {
     const stdout = new PassThrough();
     const stderr = new PassThrough();
     this.container!.modem.demuxStream(stream, stderr, stdout);
+
     if (this.options.stdout) {
       this.transferStream(stdout, this.options.logs.bind(this));
     }
@@ -256,8 +259,7 @@ export default abstract class Docker {
 
   private transferStream(
     stream: NodeJS.ReadableStream,
-    destination: (line: string) => void,
-    parser: (chunk: any) => any = (chunk: any) => chunk
+    destination: (line: string) => void
   ) {
     const passer = new PassThrough();
     passer.on("data", (chunk: any) => {
@@ -347,7 +349,9 @@ export default abstract class Docker {
 
         exec.start((err: any, stream: any) => {
           this.transferStd(stream);
-          stream.on("end", () => resolve());
+          stream.on("end", () => {
+            resolve();
+          });
         });
       });
     });
