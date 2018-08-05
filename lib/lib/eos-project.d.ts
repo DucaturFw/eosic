@@ -1,4 +1,4 @@
-import { DockerEOS } from "./docker-wrapper";
+import EosDocker from "./eos-docker";
 export interface EosProjectConfig {
     name: string;
     version: string;
@@ -30,7 +30,7 @@ export default class EosProject {
     root: string;
     configuration: EosProjectConfig;
     private contracts;
-    session: DockerEOS;
+    session: EosDocker;
     constructor(root: string, config: EosProjectConfig);
     static load(root: string): Promise<EosProject>;
     readonly configPath: string;

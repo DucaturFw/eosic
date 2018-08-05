@@ -3,13 +3,15 @@ import Docker, { IDockerOptions } from "./docker";
 import { DeepPartial } from "../utils";
 import chalk from "chalk";
 import axios from "axios";
+import * as signale from "signale";
 
 export const binariesPath = path.resolve(__dirname, "..", "..", "bin");
 export const defaultProjectPath: string = path.resolve(
   __dirname,
   "..",
   "..",
-  "default"
+  "templates",
+  "project"
 );
 
 export default class EosDocker extends Docker {
@@ -49,16 +51,12 @@ export default class EosDocker extends Docker {
       onStart: ["chmod +x /compile", "chmod +x /eosiocppfix"],
       logs(msg: any, ...args: any[]) {
         msg.split("\n").forEach((line: string) => {
-          console.log(
-            chalk.gray(`[${(<Docker>this).options.container!.name}]: ${line}`)
-          );
+          signale.debug(`[${(<Docker>this).options.container!.name}]: ${line}`);
         });
       },
       errors(msg: any, ...args: any[]) {
         msg.split("\n").forEach((line: string) => {
-          console.log(
-            chalk.red(`[${(<Docker>this).options.container!.name}]: ${line}`)
-          );
+          signale.warn(`[${(<Docker>this).options.container!.name}]: ${line}`);
         });
       }
     };

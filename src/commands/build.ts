@@ -45,16 +45,6 @@ export default class Compile extends BaseCommand {
           )
         }
       },
-      logs(msg: any, ...args: any[]) {
-        msg.split("\n").forEach((line: string) => {
-          signale.debug(`[${(<Docker>this).options.container!.name}]: ${line}`);
-        });
-      },
-      errors(msg: any, ...args: any[]) {
-        msg.split("\n").forEach((line: string) => {
-          signale.warn(`[${(<Docker>this).options.container!.name}]: ${line}`);
-        });
-      },
       stderr: true,
       stdout: false
     });

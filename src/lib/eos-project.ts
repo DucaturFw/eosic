@@ -4,6 +4,8 @@ import * as globby from "globby";
 import * as dirsum from "dirsum";
 import { DockerEOS } from "./docker-wrapper";
 import * as signale from "signale";
+import Docker from "./docker";
+import EosDocker from "./eos-docker";
 
 export interface EosProjectConfig {
   name: string;
@@ -59,7 +61,7 @@ export default class EosProject {
   root: string;
   configuration: EosProjectConfig;
   private contracts: EosContractsCollection = {};
-  session!: DockerEOS;
+  session!: EosDocker;
 
   constructor(root: string, config: EosProjectConfig) {
     if (!path.isAbsolute(root)) {
@@ -137,8 +139,17 @@ export default class EosProject {
 
   async start(log: boolean = true): Promise<any> {
     if (!this.session) {
-      this.session = await DockerEOS.create(this.root);
-      return this.session.start(log);
+      this.session = await Docker.create<EosDocker>(EosDocker, {
+        cwd: this.root,
+        container: {
+          binds: {
+            "/contracts": this.contractsPath
+          }
+        }
+      });
+
+      console.log(this.session.containerBinds);
+      return this.session.start();
     }
   }
 
@@ -159,10 +170,7 @@ export default class EosProject {
         await this.start(false);
       }
       signale.info(`Starting compilation of ${contractName}`);
-      const output = await this.session.compile(
-        `${contractName}/${contractName}`
-      );
-      output.split("\n").forEach(line => signale.debug(line));
+      await this.session.compile(`${contractName}/${contractName}`);
       const compiledHash = await contract.digest();
       this.configuration.contracts[contractName].checksum = compiledHash;
     } else {
