@@ -161,7 +161,7 @@ export default class EosProject {
               }
             }
           },
-          this.dockerOptions
+          this.dockerOptions || {}
         )
       );
 

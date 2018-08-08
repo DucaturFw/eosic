@@ -32,8 +32,7 @@ export default class EosDocker extends Docker {
           "/compile": binariesPath + "/compile"
         },
         command: [
-          "/opt/eosio/bin/nodeosd.sh --data-dir /opt/eosio/bin/data-dir -e --contracts-console --http-server-address 127.0.0.1:8888 --http-validate-host 0"
-          // "/opt/eosio/bin/nodeosd.sh --help"
+          "/opt/eosio/bin/nodeosd.sh --data-dir /opt/eosio/bin/data-dir -e --contracts-console"
         ],
         expose: [8888, 9876],
         hostname: "test",
@@ -80,7 +79,7 @@ export default class EosDocker extends Docker {
       await new Promise(resolve => setTimeout(resolve, 1000));
       try {
         const responce = await axios.get(
-          "http://127.0.0.1:8888/v1/chain/get_info"
+          "http://0.0.0.0:8888/v1/chain/get_info"
         );
         success = true;
       } catch (e) {
