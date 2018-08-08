@@ -9,6 +9,21 @@ const Eos: any = require("eosjs");
 
 const { ecc } = Eos.modules;
 export { run } from "@oclif/command";
+
+export function createAccount(
+  eos: any,
+  pub: string,
+  name: string,
+  creator?: string
+): Promise<void> {
+  creator = creator || "eosio";
+  return eos.newaccount({
+    creator: creator,
+    name: name,
+    owner: pub,
+    active: pub
+  });
+}
 export async function start(opts?: any): Promise<EosProject> {
   const options = {
     cwd: opts.cwd || process.cwd(),
@@ -33,6 +48,7 @@ export async function start(opts?: any): Promise<EosProject> {
 
   return project;
 }
+
 export async function createContract(
   pub: string,
   eos: any,
@@ -43,6 +59,7 @@ export async function createContract(
     cwd: process.cwd(),
     contractName: null,
     logs: false,
+    creator: "eosio",
     ...opts
   };
 
@@ -54,7 +71,6 @@ export async function createContract(
     .join("");
 
   const contractName = options.contractName || `${pid}${name}`.slice(0, 12);
-  // console.log(contractName);
 
   const wasm = fs.readFileSync(
     path.join(options.cwd, `contracts/${name}/${name}.wasm`)
@@ -65,21 +81,10 @@ export async function createContract(
     "utf8"
   );
 
-  // console.log("newaccount");
-  const account = await eos.newaccount({
-    creator: "eosio",
-    name: contractName,
-    owner: pub,
-    active: pub
-  });
+  const account = createAccount(eos, pub, contractName, opts.creator);
 
-  // await eos.transaction((tr: any) => {
-  console.log("setcode");
   await eos.setcode(contractName, 0, 0, wasm);
-  console.log("setabi");
   await eos.setabi(contractName, JSON.parse(abi));
-  // });
-  console.log("load contract at " + contractName);
   const contract = await eos.contract(contractName);
   return {
     account: contractName,
@@ -100,6 +105,7 @@ function deepJson(input: { [index: string]: any }): string {
 
   return JSON.stringify(output);
 }
+
 export function payload(input: { [index: string]: any }): string {
   return deepJson(input);
 }

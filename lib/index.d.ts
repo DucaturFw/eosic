@@ -1,6 +1,7 @@
 import EosProject from "./lib/eos-project";
 export { EosProject };
 export { run } from "@oclif/command";
+export declare function createAccount(eos: any, pub: string, name: string, creator?: string): Promise<void>;
 export declare function start(opts?: any): Promise<EosProject>;
 export declare function createContract(pub: string, eos: any, name: string, opts?: any): Promise<{
     account: any;
