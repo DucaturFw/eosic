@@ -3,4 +3,3 @@
 CONTRACTPATH=$1
 cd /contracts
 /eosiocppfix -o ${CONTRACTPATH}.wast ${CONTRACTPATH}.cpp
-/eosiocppfix -g ${CONTRACTPATH}.abi ${CONTRACTPATH}.cpp

@@ -18,7 +18,17 @@ export default class Start extends BaseCommand {
 
     const project = await EosProject.load(this.flags.cwd, {
       stderr: true,
-      stdout: !!flags.verbose
+      stdout: !!flags.verbose,
+      image: {
+        repository: "eosio/eos-dev",
+        tag: "latest"
+      }
+    });
+
+    death(async () => {
+      console.log("exit");
+      await project.stop();
+      process.exit();
     });
 
     await project.start();
@@ -27,17 +37,19 @@ export default class Start extends BaseCommand {
       cwd: this.flags.cwd
     });
 
-    scripts.forEach(script => require(path.resolve(this.flags.cwd, script)));
-
-    death(async () => {
-      console.log("exit");
-      await project.stop();
-      process.exit();
-    });
+    for (let script of scripts) {
+      try {
+        const method = require(path.resolve(this.flags.cwd, script)) as {
+          default: () => Promise<any>;
+        };
+        await method.default();
+      } catch (e) {
+        console.error(e);
+      }
+    }
 
     while (true) {
       await sleep(1000);
-      console.log("tst");
     }
   }
 }

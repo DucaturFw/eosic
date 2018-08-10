@@ -5,9 +5,7 @@ import axios from "axios";
 
 export { EosProject };
 
-const Eos: any = require("eosjs");
-
-const { ecc } = Eos.modules;
+import { EosInstance, Name } from "eosjs";
 export { run } from "@oclif/command";
 
 export function createAccount(
@@ -49,9 +47,69 @@ export async function start(opts?: any): Promise<EosProject> {
   return project;
 }
 
+function require_permissions(
+  account: Name,
+  key: string,
+  actor: Name,
+  parent: string
+) {
+  return {
+    account: `${account}`,
+    permission: "active",
+    parent: `${parent}`,
+    auth: {
+      threshold: 1,
+      keys: [
+        {
+          key: `${key}`,
+          weight: 1
+        }
+      ],
+      accounts: [
+        {
+          permission: {
+            actor: `${actor}`,
+            permission: "eosio.code"
+          },
+          weight: 1
+        }
+      ],
+      waits: []
+    }
+  };
+}
+
+export function allowContract(
+  eos: EosInstance,
+  auth: string,
+  pub: string,
+  contract: Name,
+  parent: string = "owner"
+) {
+  let [account, permission] = auth.split("@");
+  permission = permission || "active";
+  parent = parent || "owner";
+
+  return eos.transaction({
+    actions: [
+      {
+        account: "eosio",
+        name: "updateauth",
+        authorization: [
+          {
+            actor: account,
+            permission: permission
+          }
+        ],
+        data: require_permissions(account, pub, contract, parent)
+      }
+    ]
+  });
+}
+
 export async function createContract(
   pub: string,
-  eos: any,
+  eos: EosInstance,
   name: string,
   opts: any = {}
 ) {
@@ -81,14 +139,16 @@ export async function createContract(
     "utf8"
   );
 
-  const account = createAccount(eos, pub, contractName, opts.creator);
+  const account = await createAccount(eos, pub, contractName, opts.creator);
 
-  await eos.setcode(contractName, 0, 0, wasm);
-  await eos.setabi(contractName, JSON.parse(abi));
+  const setcode = await eos.setcode(contractName, 0, 0, wasm);
+  const setabi = await eos.setabi(contractName, JSON.parse(abi));
   const contract = await eos.contract(contractName);
   return {
     account: contractName,
-    contract
+    contract,
+    setcode,
+    setabi
   };
 }
 

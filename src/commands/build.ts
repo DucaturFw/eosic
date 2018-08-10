@@ -25,7 +25,10 @@ export default class Compile extends BaseCommand {
     }
   ];
 
-  static flags = BaseCommand.flags;
+  static flags = {
+    ignoreAbi: flags.boolean({ char: "a" }),
+    ...BaseCommand.flags
+  };
 
   static description = `Build providen file as eosio contract`;
 
@@ -59,6 +62,9 @@ export default class Compile extends BaseCommand {
     await docker.healthy();
     signale.info("Begin compilation of " + path.basename(args.cpp, ".cpp"));
     await docker.compile(`external/${path.basename(args.cpp, ".cpp")}`);
+    if (!flags.ignoreAbi) {
+      await docker.abigen(`external/${path.basename(args.cpp, ".cpp")}`);
+    }
     signale.info("Stop and remove temporary container");
     await docker.stop();
     await docker.remove();
