@@ -191,7 +191,7 @@ export default class EosProject {
       signale.info(`Starting compilation of ${contractName}`);
       await this.session.compile(`${contractName}/${contractName}`);
 
-      if (config.ignoreAbi) {
+      if (!config.ignoreAbi) {
         await this.session.abigen(`${contractName}/${contractName}`);
       }
 
