@@ -17,6 +17,7 @@ export interface EosContractConfig {
     description: string;
     entry: string;
     checksum?: string;
+    ignoreAbi?: boolean;
 }
 export declare class EosContract {
     root: string;

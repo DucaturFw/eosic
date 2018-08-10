@@ -1,7 +1,7 @@
 {
   "name": "eosic",
   "description": "Unofficial toolset to operate with EOSIO platform",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Aler Denisov @alerdenisov",
   "bin": {
     "eosic": "./bin/run"

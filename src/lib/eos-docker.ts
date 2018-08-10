@@ -29,7 +29,8 @@ export default class EosDocker extends Docker {
             defaultProjectPath + "/config.ini",
           "/.bashrc": binariesPath + "/.bashrc",
           "/eosiocppfix": binariesPath + "/eosiocppfix",
-          "/compile": binariesPath + "/compile"
+          "/compile": binariesPath + "/compile",
+          "/abigen": binariesPath + "/abigen"
         },
         command: [
           "/opt/eosio/bin/nodeosd.sh --data-dir /opt/eosio/bin/data-dir -e --contracts-console"
@@ -65,6 +66,10 @@ export default class EosDocker extends Docker {
   async compile(path: string) {
     // return this.exec("eosio-cpp ");
     return this.exec(`bash`, `-c`, `/compile ${path}`);
+  }
+
+  async abigen(path: string) {
+    return this.exec(`bash`, `-c`, `/abigen ${path}`);
   }
 
   async healthy(): Promise<boolean> {

@@ -11,6 +11,7 @@ export default class Compile extends BaseCommand {
         force: import("../../node_modules/@oclif/parser/lib/flags").IBooleanFlag<boolean>;
         verbose: import("../../node_modules/@oclif/parser/lib/flags").IBooleanFlag<boolean>;
         cwd: flags.IOptionFlag<string | undefined>;
+        ignoreAbi: import("../../node_modules/@oclif/parser/lib/flags").IBooleanFlag<boolean>;
     };
     static description: string;
     static examples: string[];

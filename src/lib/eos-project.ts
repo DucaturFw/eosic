@@ -24,6 +24,7 @@ export interface EosContractConfig {
   description: string;
   entry: string;
   checksum?: string;
+  ignoreAbi?: boolean;
 }
 
 export class EosContract {
@@ -182,14 +183,20 @@ export default class EosProject {
     const hash = await contract.digest();
 
     // compile if it needed
-    if (this.configuration.contracts[contractName].checksum !== hash) {
+    const config = this.configuration.contracts[contractName];
+    if (config.checksum !== hash) {
       if (!this.session) {
         await this.start(false);
       }
       signale.info(`Starting compilation of ${contractName}`);
       await this.session.compile(`${contractName}/${contractName}`);
+
+      if (config.ignoreAbi) {
+        await this.session.abigen(`${contractName}/${contractName}`);
+      }
+
       const compiledHash = await contract.digest();
-      this.configuration.contracts[contractName].checksum = compiledHash;
+      config.checksum = compiledHash;
     } else {
       signale.info(`${contractName} is up to date`);
     }
