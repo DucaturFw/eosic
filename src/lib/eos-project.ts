@@ -44,9 +44,9 @@ export class EosContract {
     return new Promise<string>((resolve, reject) => {
       dirsum.digest(this.root, "md5", (err: any, hashes: any) => {
         if (err) {
-          reject(err);
+          return reject(err);
         }
-        resolve(<string>hashes.hash);
+        return resolve(<string>hashes.hash);
       });
     });
   }
