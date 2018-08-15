@@ -14,34 +14,38 @@ export default class Start extends BaseCommand {
   static flags = BaseCommand.flags;
 
   async run() {
-    const project = await EosProject.load(this.flags.cwd);
-    await project.start();
+    const { args, flags } = this;
 
-    let success = false;
-    let tries = 0;
-    while (!success && tries < 10) {
-      tries++;
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      try {
-        const responce = await axios.get(
-          "http://0.0.0.0:8888/v1/chain/get_info"
-        );
-        success = true;
-      } catch (e) {
-        console.error(`waiting for a node (${tries} try)`);
+    const project = await EosProject.load(this.flags.cwd, {
+      stderr: true,
+      stdout: !!flags.verbose,
+      image: {
+        repository: "eosio/eos-dev",
+        tag: "latest"
       }
-    }
-
-    const scripts = await globby("migrate/*.js", {
-      cwd: this.flags.cwd
     });
-
-    scripts.forEach(script => require(path.resolve(this.flags.cwd, script)));
 
     death(async () => {
       await project.stop();
       process.exit();
     });
+
+    await project.start();
+
+    const scripts = await globby("migrate/*.js", {
+      cwd: this.flags.cwd
+    });
+
+    for (let script of scripts) {
+      try {
+        const method = require(path.resolve(this.flags.cwd, script)) as {
+          default: () => Promise<any>;
+        };
+        await method.default();
+      } catch (e) {
+        console.error(e);
+      }
+    }
 
     while (true) {
       await sleep(1000);

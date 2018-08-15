@@ -1,4 +1,6 @@
-import { DockerEOS } from "./docker-wrapper";
+import { IDockerOptions } from "./docker";
+import EosDocker from "./eos-docker";
+import { DeepPartial } from "../utils";
 export interface EosProjectConfig {
     name: string;
     version: string;
@@ -15,6 +17,7 @@ export interface EosContractConfig {
     description: string;
     entry: string;
     checksum?: string;
+    ignoreAbi?: boolean;
 }
 export declare class EosContract {
     root: string;
@@ -26,12 +29,14 @@ export declare type EosContractsCollection = {
     [name: string]: EosContract;
 };
 export default class EosProject {
+    static DEFAULT_PROJECT: string;
     root: string;
     configuration: EosProjectConfig;
     private contracts;
-    session: DockerEOS;
-    constructor(root: string, config: EosProjectConfig);
-    static load(root: string): Promise<EosProject>;
+    session: EosDocker;
+    dockerOptions?: DeepPartial<IDockerOptions>;
+    constructor(root: string, config: EosProjectConfig, dockerOptions?: DeepPartial<IDockerOptions>);
+    static load(root: string, dockerOptions?: DeepPartial<IDockerOptions>): Promise<EosProject>;
     readonly configPath: string;
     readonly contractsPath: string;
     private sanitizeContractConfig;

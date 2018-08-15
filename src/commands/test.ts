@@ -23,26 +23,9 @@ export default class Test extends BaseCommand {
       cwd: this.flags.cwd
     });
 
-    console.log(tests);
-
     tests.forEach(test => {
       mocha.addFile(path.resolve(this.flags.cwd, test));
     });
-
-    let success = false;
-    let tries = 0;
-    while (!success && tries < 10) {
-      tries++;
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      try {
-        const responce = await axios.get(
-          "http://0.0.0.0:8888/v1/chain/get_info"
-        );
-        success = true;
-      } catch (e) {
-        console.error(`waiting for a node (${tries} try)`);
-      }
-    }
 
     mocha.timeout(20000);
 

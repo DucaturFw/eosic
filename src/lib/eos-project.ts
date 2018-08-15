@@ -4,6 +4,10 @@ import * as globby from "globby";
 import * as dirsum from "dirsum";
 import { DockerEOS } from "./docker-wrapper";
 import * as signale from "signale";
+import Docker, { IDockerOptions } from "./docker";
+import EosDocker from "./eos-docker";
+import { DeepPartial } from "../utils";
+import * as deepmerge from "deepmerge";
 
 export interface EosProjectConfig {
   name: string;
@@ -20,6 +24,7 @@ export interface EosContractConfig {
   description: string;
   entry: string;
   checksum?: string;
+  ignoreAbi?: boolean;
 }
 
 export class EosContract {
@@ -39,9 +44,9 @@ export class EosContract {
     return new Promise<string>((resolve, reject) => {
       dirsum.digest(this.root, "md5", (err: any, hashes: any) => {
         if (err) {
-          reject(err);
+          return reject(err);
         }
-        resolve(<string>hashes.hash);
+        return resolve(<string>hashes.hash);
       });
     });
   }
@@ -50,26 +55,43 @@ export class EosContract {
 export type EosContractsCollection = { [name: string]: EosContract };
 
 export default class EosProject {
+  static DEFAULT_PROJECT: string = path.resolve(
+    __dirname,
+    "..",
+    "..",
+    "default"
+  );
   root: string;
   configuration: EosProjectConfig;
   private contracts: EosContractsCollection = {};
-  session!: DockerEOS;
+  session!: EosDocker;
+  dockerOptions?: DeepPartial<IDockerOptions>;
 
-  constructor(root: string, config: EosProjectConfig) {
+  constructor(
+    root: string,
+    config: EosProjectConfig,
+    dockerOptions?: DeepPartial<IDockerOptions>
+  ) {
     if (!path.isAbsolute(root)) {
       throw new Error("Path should be absolute");
     }
 
     this.configuration = config;
     this.root = root;
+    this.dockerOptions = dockerOptions;
   }
 
-  static async load(root: string): Promise<EosProject> {
+  static async load(
+    root: string,
+    dockerOptions?: DeepPartial<IDockerOptions>
+  ): Promise<EosProject> {
     const _configPath = path.join(root, "eosic.json");
-    const configPath = path.isAbsolute(_configPath) ? _configPath : path.resolve(_configPath);
+    const configPath = path.isAbsolute(_configPath)
+      ? _configPath
+      : path.resolve(_configPath);
     const configContent = await fs.readFile(configPath, "utf8");
     const config = <EosProjectConfig>JSON.parse(configContent);
-    return new EosProject(root, config);
+    return new EosProject(root, config, dockerOptions);
   }
 
   get configPath() {
@@ -97,7 +119,7 @@ export default class EosProject {
     const config: EosContractConfig = this.sanitizeContractConfig(_config);
     const { name } = config;
     const contractRoot = path.join(this.contractsPath, name);
-    if (!await fs.pathExists(contractRoot)) {
+    if (!(await fs.pathExists(contractRoot))) {
       throw new Error("Contract not found in project");
     }
 
@@ -129,8 +151,23 @@ export default class EosProject {
 
   async start(log: boolean = true): Promise<any> {
     if (!this.session) {
-      this.session = await DockerEOS.create(this.root);
-      return this.session.start(log);
+      this.session = await Docker.create<EosDocker>(
+        EosDocker,
+        deepmerge(
+          {
+            cwd: this.root,
+            container: {
+              binds: {
+                "/contracts": this.contractsPath
+              }
+            }
+          },
+          this.dockerOptions || {}
+        )
+      );
+
+      await this.session.start();
+      return this.session.healthy();
     }
   }
 
@@ -146,15 +183,20 @@ export default class EosProject {
     const hash = await contract.digest();
 
     // compile if it needed
-    if (this.configuration.contracts[contractName].checksum !== hash) {
+    const config = this.configuration.contracts[contractName];
+    if (config.checksum !== hash) {
       if (!this.session) {
         await this.start(false);
       }
       signale.info(`Starting compilation of ${contractName}`);
-      const output = await this.session.compile(contractName);
-      output.split("\n").forEach(line => signale.debug(line));
+      await this.session.compile(`${contractName}/${contractName}`);
+
+      if (!config.ignoreAbi) {
+        await this.session.abigen(`${contractName}/${contractName}`);
+      }
+
       const compiledHash = await contract.digest();
-      this.configuration.contracts[contractName].checksum = compiledHash;
+      config.checksum = compiledHash;
     } else {
       signale.info(`${contractName} is up to date`);
     }

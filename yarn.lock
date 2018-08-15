@@ -205,6 +205,10 @@
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.4.tgz#5ca073b330d90b4066d6ce18f60d57f2084ce8ca"
 
+"@types/deepmerge@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/deepmerge/-/deepmerge-2.1.0.tgz#22f175e5cb55874fe818caa6fd50a1d98fc3d748"
+
 "@types/dockerode@^2.5.4":
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-2.5.5.tgz#6346ee3b25abc90a91bd5e220cc6f82b3c1478c0"
@@ -935,6 +939,10 @@ deep-eql@^3.0.0:
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-3.0.1.tgz#dfc9404400ad1c8fe023e7da1df1c147c4b444df"
   dependencies:
     type-detect "^4.0.0"
+
+deepmerge@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.1.1.tgz#e862b4e45ea0555072bf51e7fd0d9845170ae768"
 
 default-require-extensions@^1.0.0:
   version "1.0.0"
