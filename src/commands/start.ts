@@ -26,7 +26,6 @@ export default class Start extends BaseCommand {
     });
 
     death(async () => {
-      console.log("exit");
       await project.stop();
       process.exit();
     });
