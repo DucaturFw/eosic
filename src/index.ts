@@ -5,7 +5,7 @@ import axios from "axios";
 
 export { EosProject };
 
-import { EosInstance, Name } from "eosjs";
+import { EosInstance, Name, IEosContract } from "eosjs";
 export { run } from "@oclif/command";
 
 export function createAccount(
@@ -107,12 +107,17 @@ export function allowContract(
   });
 }
 
-export async function createContract(
+export async function createContract<T extends IEosContract>(
   pub: string,
   eos: EosInstance,
   name: string,
   opts: any = {}
-) {
+): Promise<{
+  account: string;
+  contract: T;
+  setcode: any;
+  setabi: any;
+}> {
   const options = {
     cwd: process.cwd(),
     contractName: null,
@@ -143,7 +148,7 @@ export async function createContract(
 
   const setcode = await eos.setcode(contractName, 0, 0, wasm);
   const setabi = await eos.setabi(contractName, JSON.parse(abi));
-  const contract = await eos.contract(contractName);
+  const contract = await eos.contract<T>(contractName);
   return {
     account: contractName,
     contract,
